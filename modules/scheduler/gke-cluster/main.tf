@@ -105,7 +105,8 @@ resource "google_container_cluster" "gke_cluster" {
 
   # Note: the existence of the "master_authorized_networks_config" block enables
   # the master authorized networks even if it's empty.
-  master_authorized_networks_config {
+  dynamic "master_authorized_networks_config" {
+    for_each = length(var.master_authorized_networks) == 0 ? toset([]) : toset([1])
     dynamic "cidr_blocks" {
       for_each = var.master_authorized_networks
       content {
